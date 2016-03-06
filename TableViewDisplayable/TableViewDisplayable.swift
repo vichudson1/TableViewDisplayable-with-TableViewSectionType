@@ -10,6 +10,9 @@ import Foundation
 	A simple protocol for structuring data to display and interact with in a tableview. Several free implementation functions are provided in the protocol extension.
 */
 protocol TableViewDisplayable {
+	
+	typealias CellItem
+	
 	var sections: [TableViewSectionType]  { get set }
 	
 	func numberOfSections() -> Int
@@ -23,9 +26,9 @@ protocol TableViewDisplayable {
 	
 	- returns: Object located at the IndexPath
 	*/
-	func object(atIndexPath indexPath: NSIndexPath) -> AnyObject
+	func object(atIndexPath indexPath: NSIndexPath) -> CellItem
 	func insert(object object:AnyObject, atIndexPath indexPath: NSIndexPath)
-	func removeObject(atIndexPath indexPath: NSIndexPath) -> AnyObject
+	func removeObject(atIndexPath indexPath: NSIndexPath) -> CellItem
 	func moveItem(fromIndexPath sourceIP: NSIndexPath, toIndexPath destinationIP: NSIndexPath)
 }
 
@@ -43,16 +46,16 @@ extension TableViewDisplayable {
 		return sections[section].header
 	}
 	
-	func objectForIndexPath(indexPath: NSIndexPath) -> AnyObject {
-		return sections[indexPath.section].rows[indexPath.row]
+	func objectForIndexPath(indexPath: NSIndexPath) -> CellItem {
+		return sections[indexPath.section].rows[indexPath.row] as! CellItem
 	}
 	
-	func insert(object object:AnyObject, atIndexPath indexPath: NSIndexPath) {
-		sections[indexPath.section].insert(object: object, atIndex: indexPath.row)
+	func insert(object object:CellItem, atIndexPath indexPath: NSIndexPath) {
+		sections[indexPath.section].insert(object: object as! AnyObject, atIndex: indexPath.row)
 	}
 
-	mutating func removeObject(atIndexPath indexPath: NSIndexPath) -> AnyObject {
-		return sections[indexPath.section].removeObject(atIndex: indexPath.row)
+	mutating func removeObject(atIndexPath indexPath: NSIndexPath) -> CellItem {
+		return sections[indexPath.section].removeObject(atIndex: indexPath.row) as! CellItem
 	}
 
 	func moveItem(fromIndexPath sourceIP: NSIndexPath, toIndexPath destinationIP: NSIndexPath) {
