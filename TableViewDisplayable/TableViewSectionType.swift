@@ -19,7 +19,7 @@ protocol TableViewSectionType {
 	var footer: String { get set }
 	
 	/// `Array` The items contained in your section.
-	var rows: [AnyObject] { get set }
+	var rows: [Any] { get set }
 	
 	/**
 	Inserts Items into your section.
@@ -27,7 +27,7 @@ protocol TableViewSectionType {
 	- parameter object: `AnyObject`: The item you want to insert into your section.
 	- parameter index:  `Int`: The index you want to insert the item to.
 	*/
-	mutating func insert(object object: AnyObject, atIndex index: Int)
+	mutating func insert(object object: Any, atIndex index: Int)
 	
 	/**
 	Removes and returns the item located at the passed in index.
@@ -36,7 +36,7 @@ protocol TableViewSectionType {
 	
 	- returns: `AnyObject`
 	*/
-	mutating func removeObject(atIndex index: Int) -> AnyObject
+	mutating func removeObject(atIndex index: Int) -> Any
 
 	/**
 	Creates an instance of a Type conforming to `TableViewSectionType`.
@@ -45,19 +45,19 @@ protocol TableViewSectionType {
 	- parameter footer: `String`: The footer for the section.
 	- parameter rows:   `[AnyObject]`: An array containing the items for the section.
 	*/
-	init(header:String, footer: String, rows:[AnyObject])
+	init(header:String, footer: String, rows:[Any])
 }
 
 extension TableViewSectionType {
-	mutating func insert(object object: AnyObject, atIndex index: Int) {
+	mutating func insert(object object: Any, atIndex index: Int) {
 		rows.insert(object, atIndex: index)
 	}
 	
-	mutating func removeObject(atIndex index: Int) -> AnyObject {
+	mutating func removeObject(atIndex index: Int) -> Any {
 		return rows.removeAtIndex(index)
 	}
 	
-	init(header:String = "", footer: String = "", rows:[AnyObject] = []) {
+	init(header:String = "", footer: String = "", rows:[Any] = []) {
 		self.init(header: header, footer: footer, rows: rows)
 	}
 }

@@ -141,7 +141,7 @@ extension TableViewDisplayable {
 	}
 
 	mutating func insert(object object: CellItem, atIndexPath indexPath: NSIndexPath) {
-		sections[indexPath.section].insert(object: object as! AnyObject, atIndex: indexPath.row)
+		sections[indexPath.section].insert(object: object as Any, atIndex: indexPath.row)
 	}
 
 	mutating func remove(objectAtIndexPath indexPath: NSIndexPath) -> CellItem {
