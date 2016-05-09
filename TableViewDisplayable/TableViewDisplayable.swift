@@ -11,7 +11,7 @@ import Foundation
 */
 protocol TableViewDisplayable {
 	/// Set `CellItem` to the Type you'll be displaying in your tableview.
-	typealias CellItem
+	associatedtype CellItem
 	
 	/// The Array that represents the sections of your table. These objects should conform to `TableViewSectionType`.
 	var sections: [TableViewSectionType]  { get set }
@@ -91,6 +91,10 @@ protocol TableViewDisplayable {
 	*/
 	mutating func moveItem(fromIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath)
 
+	
+	mutating func replace(itemAtIndexPath indexPath: NSIndexPath, withNewItem item: CellItem)
+
+	
 	/**
 	Inserts a new `TableViewSectionType` into your data structure.
 	
@@ -106,6 +110,9 @@ protocol TableViewDisplayable {
 	- returns: `TableViewDescriptionType`
 	*/
 	mutating func remove(sectionAtIndex index: Int) -> TableViewSectionType
+	
+	
+	mutating func replace(sectionAtIndex index: Int, withNewSection section: TableViewSectionType)
 }
 
 
@@ -152,6 +159,11 @@ extension TableViewDisplayable {
 		let item = self.remove(objectAtIndexPath: sourceIndexPath)
 		self.insert(object: item, atIndexPath: destinationIndexPath)
 	}
+	
+	mutating func replace(itemAtIndexPath indexPath: NSIndexPath, withNewItem item: CellItem) {
+		remove(objectAtIndexPath: indexPath)
+		insert(object: item, atIndexPath: indexPath)
+	}
 
 	mutating func insert(section section: TableViewSectionType, atIndex index: Int) {
 		sections.insert(section, atIndex: index)
@@ -160,4 +172,10 @@ extension TableViewDisplayable {
 	mutating func remove(sectionAtIndex index: Int) -> TableViewSectionType {
 		return sections.removeAtIndex(index)		
 	}
+	
+	mutating func replace(sectionAtIndex index: Int, withNewSection section: TableViewSectionType) {
+		remove(sectionAtIndex: index)
+		insert(section: section, atIndex: index)
+	}
+
 }
