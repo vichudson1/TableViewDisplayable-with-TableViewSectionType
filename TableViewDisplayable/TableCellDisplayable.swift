@@ -14,7 +14,7 @@ protocol TableCellTextDisplayable {
 }
 
 extension TableCellTextDisplayable {
-	func configure(cell cell: UITableViewCell) {
+	func configure(cell: UITableViewCell) {
 		cell.textLabel?.text = textLabelString
 		
 		var detailString = ""

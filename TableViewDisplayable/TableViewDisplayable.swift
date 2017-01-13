@@ -30,7 +30,7 @@ protocol TableViewDisplayable {
 	
 	- returns: Int
 	*/
-	func numberOfRowsInSection(section section: Int) -> Int
+	func numberOfRowsInSection(section: Int) -> Int
 	
 	/**
 	The title for section header.
@@ -39,7 +39,7 @@ protocol TableViewDisplayable {
 	
 	- returns: String
 	*/
-	func titleForHeaderForSection(section section: Int) -> String
+	func titleForHeaderForSection(section: Int) -> String
 	
 	/**
 	The title for the section footer.
@@ -48,7 +48,7 @@ protocol TableViewDisplayable {
 	
 	- returns: String
 	*/
-	func titleForFooterForSection(section section: Int) -> String
+	func titleForFooterForSection(section: Int) -> String
 	
 	/**
 	Returns the object located at the indexPath.
@@ -57,7 +57,7 @@ protocol TableViewDisplayable {
 	
 	- returns: Type defined by `CellItem`
 	*/
-	func object(atIndexPath indexPath: NSIndexPath) -> CellItem
+	func object(atIndexPath indexPath: IndexPath) -> CellItem
 	
 	/**
 	An array of all the `CellItem`s in your structure.
@@ -72,7 +72,7 @@ protocol TableViewDisplayable {
 	- parameter object:    `CellItem` you want to insert.
 	- parameter indexPath: `NSIndexPath` The location you want the item inserted.
 	*/
-	mutating func insert(object object:CellItem, atIndexPath indexPath: NSIndexPath)
+	mutating func insert(object:CellItem, atIndexPath indexPath: IndexPath)
 	
 	/**
 	Remove objects located in your data structure. The removed item is returned to the caller.
@@ -81,7 +81,7 @@ protocol TableViewDisplayable {
 	
 	- returns: `CellItem`
 	*/
-	mutating func remove(objectAtIndexPath indexPath: NSIndexPath) -> CellItem
+	mutating func remove(objectAtIndexPath indexPath: IndexPath) -> CellItem
 
 	/**
 	Move `CellItem`s around within your data structure.
@@ -89,10 +89,10 @@ protocol TableViewDisplayable {
 	- parameter sourceIndexPath:      `NSIndexPath` The index path of the `CellItem`s curent location.
 	- parameter destinationIndexPath: `NSIndexPath` The index path of the `CellItem`s new location.
 	*/
-	mutating func moveItem(fromIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath)
+	mutating func moveItem(fromIndexPath sourceIndexPath: IndexPath, toIndexPath destinationIndexPath: IndexPath)
 
 	
-	mutating func replace(itemAtIndexPath indexPath: NSIndexPath, withNewItem item: CellItem)
+	mutating func replace(itemAtIndexPath indexPath: IndexPath, withNewItem item: CellItem)
 
 	
 	/**
@@ -101,7 +101,7 @@ protocol TableViewDisplayable {
 	- parameter section: `TableViewSectionType` conforming item representing a section of data in your structure.
 	- parameter index:   `Int` The index you'd like to insert your new section.
 	*/
-	mutating func insert(section section: TableViewSectionType, atIndex index: Int)
+	mutating func insert(section: TableViewSectionType, atIndex index: Int)
 	
 	/**
 	Removes and returns the section an the index passed in.
@@ -123,58 +123,58 @@ extension TableViewDisplayable {
 		return sections.count
 	}
 	
-	func numberOfRowsInSection(section section: Int) -> Int {
+	func numberOfRowsInSection(section: Int) -> Int {
 		return sections[section].rows.count
 	}
 	
-	func titleForHeaderForSection(section section: Int) -> String {
+	func titleForHeaderForSection(section: Int) -> String {
 		return sections[section].header
 	}
 	
-	func titleForFooterForSection(section section: Int) -> String {
+	func titleForFooterForSection(section: Int) -> String {
 		return sections[section].footer
 	}
 	
-	func object(atIndexPath indexPath: NSIndexPath) -> CellItem {
-		return sections[indexPath.section].rows[indexPath.row] as! CellItem
+	func object(atIndexPath indexPath: IndexPath) -> CellItem {
+		return sections[(indexPath as NSIndexPath).section].rows[(indexPath as NSIndexPath).row] as! CellItem
 	}
 	
 	func allItems() -> [CellItem] {
 		var items = [CellItem]()
 		for s in sections {
-			items.appendContentsOf(s.rows.map { $0 as! CellItem })
+			items.append(contentsOf: s.rows.map { $0 as! CellItem })
 		}
 		return items
 	}
 
-	mutating func insert(object object: CellItem, atIndexPath indexPath: NSIndexPath) {
-		sections[indexPath.section].insert(object: object as Any, atIndex: indexPath.row)
+	mutating func insert(object: CellItem, atIndexPath indexPath: IndexPath) {
+		sections[(indexPath as NSIndexPath).section].insert(object: object as Any, atIndex: (indexPath as NSIndexPath).row)
 	}
 
-	mutating func remove(objectAtIndexPath indexPath: NSIndexPath) -> CellItem {
-		return sections[indexPath.section].removeObject(atIndex: indexPath.row) as! CellItem
+	mutating func remove(objectAtIndexPath indexPath: IndexPath) -> CellItem {
+		return sections[(indexPath as NSIndexPath).section].removeObject(atIndex: (indexPath as NSIndexPath).row) as! CellItem
 	}
 
-	mutating func moveItem(fromIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+	mutating func moveItem(fromIndexPath sourceIndexPath: IndexPath, toIndexPath destinationIndexPath: IndexPath) {
 		let item = self.remove(objectAtIndexPath: sourceIndexPath)
 		self.insert(object: item, atIndexPath: destinationIndexPath)
 	}
 	
-	mutating func replace(itemAtIndexPath indexPath: NSIndexPath, withNewItem item: CellItem) {
-		remove(objectAtIndexPath: indexPath)
+	mutating func replace(itemAtIndexPath indexPath: IndexPath, withNewItem item: CellItem) {
+		_ = remove(objectAtIndexPath: indexPath)
 		insert(object: item, atIndexPath: indexPath)
 	}
 
-	mutating func insert(section section: TableViewSectionType, atIndex index: Int) {
-		sections.insert(section, atIndex: index)
+	mutating func insert(section: TableViewSectionType, atIndex index: Int) {
+		sections.insert(section, at: index)
 	}
 
 	mutating func remove(sectionAtIndex index: Int) -> TableViewSectionType {
-		return sections.removeAtIndex(index)		
+		return sections.remove(at: index)		
 	}
 	
 	mutating func replace(sectionAtIndex index: Int, withNewSection section: TableViewSectionType) {
-		remove(sectionAtIndex: index)
+		_ = remove(sectionAtIndex: index)
 		insert(section: section, atIndex: index)
 	}
 
